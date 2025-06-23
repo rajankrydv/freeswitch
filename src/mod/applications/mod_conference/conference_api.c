@@ -3420,9 +3420,21 @@ switch_status_t conference_api_sub_relate(conference_obj_t *conference, switch_s
 				other_member_id = atoi(other_members_array[i2]);
 				if (clear) {
 					_conference_api_sub_relate_clear_member_relationship(conference, stream, member_id, other_member_id);
+					conference_member_add_event_data(member, event);
+					switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Action", "clear-relationship");
+		            switch_event_fire(&event);
+
 				}
 				if (nospeak || nohear || sendvideo) {
 					_conference_api_sub_relate_set_member_relationship(conference, stream, member_id, other_member_id, nospeak, nohear, sendvideo, action);
+					conference_member_add_event_data(member, event);
+					if (nospeak) {
+						switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Action", "nospeak-relationship");
+					} else if (nohear) {
+						switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Action", "nohear-relationship");
+					} else if (sendvideo) {
+						switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Action", "sendvideo-relationship");
+					}
 				}
 			}
 		}
