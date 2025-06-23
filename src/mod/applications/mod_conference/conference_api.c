@@ -3422,7 +3422,6 @@ switch_status_t conference_api_sub_relate(conference_obj_t *conference, switch_s
 					_conference_api_sub_relate_clear_member_relationship(conference, stream, member_id, other_member_id);
 					conference_member_add_event_data(member, event);
 					switch_event_add_header_string(event, SWITCH_STACK_BOTTOM, "Action", "clear-relationship");
-		            switch_event_fire(&event);
 
 				}
 				if (nospeak || nohear || sendvideo) {
@@ -3439,6 +3438,7 @@ switch_status_t conference_api_sub_relate(conference_obj_t *conference, switch_s
 			}
 		}
 	}
+	switch_event_fire(&event);
 	switch_safe_free(lbuf_members);
 	switch_safe_free(lbuf_other_members);
 	switch_safe_free(action);
